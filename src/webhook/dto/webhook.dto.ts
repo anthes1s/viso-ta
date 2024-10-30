@@ -9,4 +9,7 @@ export class WebhookDto {
 
   @ApiProperty({ description: "Google Sheets cell value", type: String })
   value: string;
+
+  @ApiProperty({ description: "Google Sheet access emails", type: Array<string> })
+  emails: Array<string>
 };
