@@ -4,6 +4,6 @@ import { RowController } from './row.controller';
 
 @Module({
   providers: [RowService],
-  controllers: [RowController]
+  controllers: [RowController],
 })
 export class RowModule {}

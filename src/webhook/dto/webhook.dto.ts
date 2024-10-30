@@ -1,5 +1,5 @@
 export type WebhookDto = {
-    row: number,
-    column: number,
-    value: string,
-}
+  row: number;
+  column: number;
+  value: string;
+};

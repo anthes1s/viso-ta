@@ -5,37 +5,36 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class WebhookService {
-    constructor(
-        private prisma: PrismaService
-    ) { }
+  constructor(private prisma: PrismaService) {}
 
-    async handleEdit(@Body() body: WebhookDto) {
-        try {
-            const row = await this.prisma.row.create({data: {
+  async handleEdit(@Body() body: WebhookDto) {
+    try {
+      const row = await this.prisma.row.create({
+        data: {
+          row: body.row,
+          column: body.column,
+          value: body.value,
+        },
+      });
+      return row;
+    } catch (err: unknown) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === 'P2002') {
+          const row = await this.prisma.row.update({
+            where: {
+              row_column: {
                 row: body.row,
                 column: body.column,
-                value: body.value,
-            }});
-            return row;
-
-        } catch (err: unknown) {
-            if (err instanceof Prisma.PrismaClientKnownRequestError) {
-                if (err.code === 'P2002') {
-                    const row = await this.prisma.row.update({
-                        where: {
-                            row_column: {
-                                row: body.row,
-                                column: body.column
-                            }
-                        },
-                        data: {
-                            value: body.value
-                        }
-                    });
-                    return row;
-                } 
-            }
-            throw new InternalServerErrorException(err);
+              },
+            },
+            data: {
+              value: body.value,
+            },
+          });
+          return row;
         }
+      }
+      throw new InternalServerErrorException(err);
     }
+  }
 }

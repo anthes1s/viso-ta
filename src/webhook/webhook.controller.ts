@@ -4,12 +4,10 @@ import { WebhookDto } from './dto';
 
 @Controller('webhook')
 export class WebhookController {
-    constructor(
-        private webhookService: WebhookService,
-    ){}
+  constructor(private webhookService: WebhookService) {}
 
-    @Post()
-    async handleEdit(@Body() data: WebhookDto) {
-        return await this.webhookService.handleEdit(data);
-    }
+  @Post()
+  async handleEdit(@Body() data: WebhookDto) {
+    return await this.webhookService.handleEdit(data);
+  }
 }

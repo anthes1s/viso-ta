@@ -6,9 +6,7 @@ const prisma = new PrismaClient();
 
 @Global()
 @Module({
-    providers: [
-        { provide: PrismaService, useValue: prisma }
-    ],
-    exports: [PrismaService]
+  providers: [{ provide: PrismaService, useValue: prisma }],
+  exports: [PrismaService],
 })
 export class PrismaModule {}
