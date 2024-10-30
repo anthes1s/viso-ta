@@ -8,7 +8,7 @@ import { RowService } from './row/row.service';
 import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
-  imports: [WebhookModule, PrismaModule, RowModule, CacheModule.register()],
+  imports: [WebhookModule, PrismaModule, RowModule, CacheModule.register({ isGlobal: true })],
   controllers: [RowController],
   providers: [PrismaService, RowService],
 })
