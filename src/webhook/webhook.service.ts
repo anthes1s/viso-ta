@@ -25,7 +25,10 @@ export class WebhookService {
         }
       });
       // If total amount of rows % 10 === 0, send notification to emails from the dto.
+      
+      console.log(row.id);
       if (row.id % 10 === 0) {
+        console.log("attempting to send an email...");
         this.email.sendEmail(...body.emails)
       }
 
