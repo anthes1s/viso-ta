@@ -6,9 +6,18 @@ import { RowController } from './row/row.controller';
 import { RowModule } from './row/row.module';
 import { RowService } from './row/row.service';
 import { CacheModule } from '@nestjs/cache-manager';
+import { SendgridModule } from './sendgrid/sendgrid.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [WebhookModule, PrismaModule, RowModule, CacheModule.register({ isGlobal: true })],
+  imports: [
+    WebhookModule, 
+    PrismaModule, 
+    RowModule, 
+    CacheModule.register({ isGlobal: true }), 
+    ConfigModule.forRoot({ isGlobal: true }),
+    SendgridModule
+  ],
   controllers: [RowController],
   providers: [PrismaService, RowService],
 })

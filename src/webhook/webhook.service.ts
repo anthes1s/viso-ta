@@ -2,10 +2,14 @@ import { Body, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { WebhookDto } from './dto';
 import { Prisma } from '@prisma/client';
+import { SendgridService } from 'src/sendgrid/sendgrid.service';
 
 @Injectable()
 export class WebhookService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private email: SendgridService,
+  ) {}
 
   async handleEdit(@Body() body: WebhookDto) {
     try {
@@ -22,7 +26,7 @@ export class WebhookService {
       });
       // If total amount of rows % 10 === 0, send notification to emails from the dto.
       if (row.id % 10 === 0) {
-        
+        this.email.sendEmail(...body.emails)
       }
 
       return row;
