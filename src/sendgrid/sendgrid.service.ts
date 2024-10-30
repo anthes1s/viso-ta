@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Client } from '@sendgrid/client';
-import sgMail = require('@sendgrid/mail')
 
 @Injectable()
 export class SendgridService {
+    private sgMail = require('@sendgrid/mail')
+
     constructor(private config: ConfigService) {
-        sgMail.setApiKey(this.config.get('SENDGRID_API'));
+        this.sgMail.setApiKey(this.config.get('SENDGRID_API'));
     }
 
     async sendEmail(...emails: Array<string>) {
-        emails.forEach(async (email) => {
+        for (const email of emails) {
             try {
                 console.log(email);
-                await sgMail.send({
+                await this.sgMail.send({
                     from: "anthesis@ukr.net",
                     to: "4nthesis@gmail.com",
                     subject: "Viso Test Assignment Email",
@@ -23,6 +23,6 @@ export class SendgridService {
             } catch (err: any) {
                 console.error(err.message);
             }
-        });
+        }
     }
 }
