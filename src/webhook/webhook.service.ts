@@ -21,6 +21,9 @@ export class WebhookService {
         }
       });
       // If total amount of rows % 10 === 0, send notification to emails from the dto.
+      if (row.id % 10 === 0) {
+        
+      }
 
       return row;
     } catch (err: unknown) {

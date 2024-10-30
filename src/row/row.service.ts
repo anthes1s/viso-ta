@@ -1,14 +1,26 @@
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   BadRequestException,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
+type Row = {
+  id: number,
+  row: number,
+  column: number,
+  value: string
+}
+
 @Injectable()
 export class RowService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(CACHE_MANAGER) private cache: Cache,
+  ) {}
 
   async getRowsById(id: string) {
     try {
@@ -16,6 +28,11 @@ export class RowService {
 
       if (Number.isNaN(numericId)) {
         throw new BadRequestException(`${id} is not a number`);
+      }
+
+      const value: Row = await this.cache.get(`rows/${id}`);
+      if (value) {
+        return value;
       }
 
       const row = await this.prisma.row.findUnique({
@@ -34,6 +51,8 @@ export class RowService {
         throw new NotFoundException(`${id} row is not found`);
       }
 
+      await this.cache.set(`rows/${id}`, row, 3600);
+
       return row;
     } catch (err: unknown) {
       throw new InternalServerErrorException();
@@ -49,3 +68,4 @@ export class RowService {
     }
   }
 }
+

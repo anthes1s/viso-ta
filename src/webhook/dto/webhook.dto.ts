@@ -11,5 +11,5 @@ export class WebhookDto {
   value: string;
 
   @ApiProperty({ description: "Google Sheet access emails", type: Array<string> })
-  emails: Array<string>
+  emails: Array<string>;
 };
