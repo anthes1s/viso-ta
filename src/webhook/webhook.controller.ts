@@ -10,7 +10,6 @@ export class WebhookController {
 
     @Post()
     async handleEdit(@Body() data: WebhookDto) {
-        console.log(data);
         return await this.webhookService.handleEdit(data);
     }
 }
