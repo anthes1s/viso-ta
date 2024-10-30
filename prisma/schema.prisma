@@ -14,7 +14,10 @@ datasource db {
 }
 
 model Row {
-  row Int @unique
-  column Int @unique
+  id Int @default(autoincrement()) @id
+  row Int 
+  column Int 
   value String?
+
+  @@unique([row, column])
 }

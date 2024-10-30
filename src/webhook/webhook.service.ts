@@ -23,8 +23,10 @@ export class WebhookService {
                 if (err.code === 'P2002') {
                     const row = await this.prisma.row.update({
                         where: {
-                            row: body.row,
-                            column: body.column,
+                            row_column: {
+                                row: body.row,
+                                column: body.column
+                            }
                         },
                         data: {
                             value: body.value

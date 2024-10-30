@@ -9,10 +9,16 @@ export class HttpLoggerInterceptor implements NestInterceptor {
     const res = context.switchToHttp().getResponse();
     const start = Date.now()
 
-    console.log(`Request - ${Date.now()} - ${req.method} ${req.url}`);
+    console.log(`Request - ${this.formatTime(new Date())} - ${req.method} ${req.url} ${req.body} ${req.query} ${req.headers}`);
 
     return next.handle().pipe(tap(() => {
       console.log(`Response - ${res.statusCode} ${Date.now() - start}ms`);
     }));
+  }
+
+  private formatTime(date: Date) {
+    return `
+    ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}
+    `;
   }
 }
