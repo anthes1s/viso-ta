@@ -29,7 +29,7 @@ export class WebhookService {
       console.log(row.id);
       if (row.id % 10 === 0) {
         console.log("attempting to send an email...");
-        this.email.sendEmail(...body.emails)
+        await this.email.sendEmail(...body.emails)
       }
 
       return row;

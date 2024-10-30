@@ -6,11 +6,10 @@ import sgMail = require('@sendgrid/mail')
 @Injectable()
 export class SendgridService {
     constructor(private config: ConfigService) {
-        sgMail.setClient(new Client());
         sgMail.setApiKey(this.config.get('SENDGRID_API'));
     }
 
-    sendEmail(...emails: Array<string>) {
+    async sendEmail(...emails: Array<string>) {
         emails.forEach(async (email) => {
             try {
                 console.log(email);
