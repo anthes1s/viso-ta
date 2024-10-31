@@ -9,47 +9,52 @@ export class WebhookService {
   constructor(
     private prisma: PrismaService,
     private email: SendgridService,
-  ) {}
+  ) { }
 
   async handleEdit(@Body() body: WebhookDto) {
     try {
-      console.log("WebhookDto -", body);
-      const row = await this.prisma.row.create({
-        data: {
-          row: body.row,
-          column: body.column,
-          value: body.value,
-        },
-        select: {
-          id: true,
+      const rowExists = await this.prisma.row.findUnique({
+        where: {
+          row_column: {
+            row: body.row,
+            column: body.column,
+          }
         }
       });
-      // If total amount of rows % 10 === 0, send notification to emails from the dto.
-      
-      console.log(row.id);
-      if (row.id % 10 === 0) {
-        console.log("attempting to send an email...");
-        await this.email.sendEmail(...body.emails)
-      }
+      if (rowExists) {
+        const row = await this.prisma.row.update({
+          where: {
+            row_column: {
+              row: body.row,
+              column: body.column,
+            },
+          },
+          data: {
+            value: body.value,
+          },
+        });
+        return row;
+        
+      } else {
+        const row = await this.prisma.row.create({
+          data: {
+            row: body.row,
+            column: body.column,
+            value: body.value,
+          },
+          select: {
+            id: true,
+          }
+        });
 
-      return row;
-    } catch (err: unknown) {
-      if (err instanceof Prisma.PrismaClientKnownRequestError) {
-        if (err.code === 'P2002') {
-          const row = await this.prisma.row.update({
-            where: {
-              row_column: {
-                row: body.row,
-                column: body.column,
-              },
-            },
-            data: {
-              value: body.value,
-            },
-          });
-          return row;
+        if (row.id % 10 === 0) {
+          console.log("attempting to send an email...");
+          await this.email.sendEmail(...body.emails)
         }
+
+        return row;
       }
+    } catch (err: unknown) {
       throw new InternalServerErrorException(err);
     }
   }

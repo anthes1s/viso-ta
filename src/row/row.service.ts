@@ -6,14 +6,8 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Row } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-
-type Row = {
-  id: number,
-  row: number,
-  column: number,
-  value: string
-}
 
 @Injectable()
 export class RowService {
@@ -38,13 +32,7 @@ export class RowService {
       const row = await this.prisma.row.findUnique({
         where: {
           id: numericId,
-        },
-        select: {
-          id: true,
-          row: true,
-          column: true,
-          value: true,
-        },
+        }
       });
 
       if (!row) {
